@@ -145,8 +145,8 @@ interface PriceData {
 function Coin() {
   const { coinId } = useParams<Params>();
   const { state } = useLocation<StateParam>();
-  const priceMatch = useRouteMatch("/:coinId/price");
-  const chartMatch = useRouteMatch("/:coinId/chart");
+  const priceMatch = useRouteMatch("/Crypto-Tracker/:coinId/price");
+  const chartMatch = useRouteMatch("/Crypto-Tracker/:coinId/chart");
 
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ["info", coinId],
@@ -216,18 +216,18 @@ function Coin() {
 
           <Tabs>
             <Tab isActive={chartMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
+              <Link to={`/Crypto-Tracker/${coinId}/chart`}>Chart</Link>
             </Tab>
             <Tab isActive={priceMatch !== null}>
-              <Link to={`/${coinId}/price`}>Price</Link>
+              <Link to={`/Crypto-Tracker/${coinId}/price`}>Price</Link>
             </Tab>
           </Tabs>
 
           <Switch>
-            <Route path={`/${coinId}/price`}>
+            <Route path={`/Crypto-Tracker/${coinId}/price`}>
               <Price />
             </Route>
-            <Route path={`/${coinId}/chart`}>
+            <Route path={`/Crypto-Tracker/${coinId}/chart`}>
               <Chart coinId={coinId} />
             </Route>
           </Switch>
