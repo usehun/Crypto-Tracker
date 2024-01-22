@@ -1,8 +1,9 @@
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 import { fetchCoins } from "../api";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   max-width: 480px;
@@ -19,8 +20,8 @@ const Header = styled.header`
 const CoinList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: gray;
-  color: black;
+  background-color: ${(props) => props.theme.textColor};
+  color: ${(props) => props.theme.bgColor};
   margin-bottom: 10px;
   border-radius: 15px;
   a {
@@ -30,14 +31,14 @@ const Coin = styled.li`
   }
   &:hover {
     a {
-      color: red;
+      color: ${(props) => props.theme.accentColor};
     }
   }
 `;
 
 const Title = styled.h1`
   font-size: 48px;
-  color: red;
+  color: yellow;
 `;
 
 const Loader = styled.span`
@@ -60,6 +61,9 @@ interface ICoin {
 }
 
 function Coins() {
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
   // const [coins, setCoins] = useState<CoinsInterface[]>([]);
   // const [loading, setLoading] = useState(true);
@@ -74,8 +78,12 @@ function Coins() {
 
   return (
     <Container>
+      <button>
+        <Link to={`/Crypto-Tracker/`}>Home Btn</Link>
+      </button>
       <Header>
-        <Title>코인</Title>
+        <Title>Crypto Tracker</Title>
+        <button onClick={toggleDarkAtom}>Toggle Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

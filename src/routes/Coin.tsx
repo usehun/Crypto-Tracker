@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Switch,
   Route,
@@ -27,7 +26,7 @@ const Header = styled.header`
 
 const Title = styled.h1`
   font-size: 48px;
-  color: red;
+  color: ${(props) => props.theme.accentColor};
 `;
 
 const Loader = styled.span`
@@ -37,9 +36,10 @@ const Loader = styled.span`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.textColor};
   padding: 10px 20px;
   border-radius: 10px;
+  color: ${(props) => props.theme.bgColor};
 `;
 const OverviewItem = styled.div`
   display: flex;
@@ -68,11 +68,10 @@ const Tab = styled.span<{ isActive: boolean }>`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.textColor};
   padding: 7px 0px;
   border-radius: 10px;
-  color: ${(props) =>
-    props.isActive ? props.theme.accentColor : props.theme.textColor};
+  color: ${(props) => (props.isActive ? `dodgerblue` : props.theme.bgColor)};
   a {
     display: block;
   }
@@ -154,8 +153,13 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId)
+    () => fetchCoinTickers(coinId),
+    {
+      // refetchInterval: 60000,
+    }
   );
+  // console.log(tickersData);
+
   // const [loading, setLoading] = useState(true);
   // const [info, setInfo] = useState<InfoData>();
   // const [priceInfo, setPriceInfo] = useState<PriceData>();
@@ -179,6 +183,9 @@ function Coin() {
 
   return (
     <Container>
+      <button>
+        <Link to={`/Crypto-Tracker/`}>Home Btn</Link>
+      </button>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
@@ -198,8 +205,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickersData?.quotes.USD.price.toFixed(2)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -224,11 +231,11 @@ function Coin() {
           </Tabs>
 
           <Switch>
-            <Route path={`/Crypto-Tracker/${coinId}/price`}>
-              <Price />
-            </Route>
             <Route path={`/Crypto-Tracker/${coinId}/chart`}>
               <Chart coinId={coinId} />
+            </Route>
+            <Route path={`/Crypto-Tracker/${coinId}/price`}>
+              <Price />
             </Route>
           </Switch>
         </>
