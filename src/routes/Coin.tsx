@@ -183,9 +183,6 @@ function Coin() {
 
   return (
     <Container>
-      <button>
-        <Link to={`/Crypto-Tracker/`}>Home Btn</Link>
-      </button>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
